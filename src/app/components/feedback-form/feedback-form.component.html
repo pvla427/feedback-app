@@ -1,0 +1,101 @@
+<div [hidden]="formHidden" class="form">
+    <div class="form-title">Напишите нам</div>
+    <form [formGroup]="feedbackForm" (ngSubmit)="sendFeedback()">
+        <div class="form-input-row">
+            <div class="width-25">
+                <label for="name">Ваше имя: </label>
+            </div>
+            <div class="width-75">
+                <fa-icon [icon]="faUser" class="input-icon"></fa-icon>
+                <input class="form-input" id="name" type="text" [formControl]="name" class="form-input input-with-icon"
+                    [class.form-input-error]="!(name.valid || name.untouched)">
+                <div [hidden]="name.valid || name.untouched">
+                    <div [hidden]="!name.hasError('required')" class="error-text">
+                        Поле должно быть заполнено!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-input-row">
+            <div class="width-25"><label for="email">Ваш Email: </label></div>
+            <div class="width-75">
+                <fa-icon [icon]="faEnvelope" class="input-icon"></fa-icon>
+                <input id="email" type="text" [formControl]="email" class="form-input input-with-icon"
+                    [class.form-input-error]="!(email.valid || email.untouched)">
+                <div [hidden]="email.valid || email.untouched">
+                    <div [hidden]="!email.hasError('required')" class="error-text">
+                        Поле должно быть заполнено!
+                    </div>
+                    <div [hidden]="!email.hasError('email')" class="error-text">
+                        Указан некорректный адрес электронной почты!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-input-row">
+            <div class="width-25"><label for="phoneNumber">Ваш телефон: </label></div>
+            <div class="width-75">
+                <fa-icon [icon]="faMobileRetro" class="input-icon"></fa-icon>
+                <input id="phoneNumber" type="text" [formControl]="phoneNumber" prefix="+7 " mask="(000) 000-00-00"
+                    [validation]="true" [showMaskTyped]="true" class="form-input input-with-icon"
+                    [class.form-input-error]="!(phoneNumber.valid || phoneNumber.untouched)">
+                <div [hidden]="phoneNumber.valid || phoneNumber.untouched">
+                    <div [hidden]="!phoneNumber.hasError('required')" class="error-text">
+                        Поле должно быть заполнено!
+                    </div>
+                    <div [hidden]="!phoneNumber.hasError('mask')" class="error-text">
+                        Некорректный формат номера телефона!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-input-row">
+            <div class="width-25"><label for="topic">Тема: </label></div>
+            <div class="width-75">
+                <select id="topic" class="form-input" [formControl]="topic">
+                    <option *ngFor="let topic of topics" [value]="topic.id">{{ topic.name }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-input-row">
+            <div class="width-25"><label for="message">Ваше сообщение: </label></div>
+            <div class="width-75">
+                <textarea id="message" [formControl]="message" class="form-input"
+                    [class.form-input-error]="!(message.valid || message.untouched)"></textarea>
+                <div [hidden]="message.valid || message.untouched">
+                    <div [hidden]="!message.hasError('required')" class="error-text">
+                        Поле должно быть заполнено!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-input-row">
+            <div class="width-25"><label for="recaptcha">Captcha: </label></div>
+            <div class="width-75">
+                <re-captcha id="recaptcha" [formControl]="recaptcha"></re-captcha>
+                <div [hidden]="recaptcha.valid || recaptcha.untouched">
+                    <div [hidden]="!recaptcha.hasError('required')" class="error-text">
+                        Необходимо пройти проверку!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-input-row">
+            <button class="offset-25" type="submit" [disabled]="!feedbackForm.valid">Отправить письмо!</button>
+        </div>
+    </form>
+</div>
+
+<div class="response-data" [hidden]="!formHidden" *ngIf="messageResponse !== null">
+    <div>Id сообщения: {{ messageResponse.id }}</div>
+    <div>Id темы: {{ messageResponse.topicId }} ({{ messageResponse.topicName }})</div>
+    <div>Id контакта: {{ messageResponse.contactId }} ({{ messageResponse.contactName }}, {{
+        messageResponse.contactEmail }}, {{ messageResponse.contactPhoneNumber }})</div>
+    <div>Сообщение: {{ messageResponse.text }}</div>
+</div>
